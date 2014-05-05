@@ -15,6 +15,7 @@ void ultrasunete_init() {
   set_output(SENZOR_TRIG_DDR, SENZOR_SPATE_TRIG);
   set_output(SENZOR_TRIG_DDR, SENZOR_STANGA_TRIG);
   set_output(SENZOR_TRIG_DDR, SENZOR_DREAPTA_TRIG);
+  set_output(DDRA, 4);
   //output low all TRIG pins
   SENZOR_TRIG_PORT &= ~((1<<SENZOR_FATA_TRIG) | (1<<SENZOR_SPATE_TRIG) | (1<<SENZOR_STANGA_TRIG) | (1<<SENZOR_DREAPTA_TRIG));
 
@@ -34,6 +35,7 @@ void ultrasunete_50Hz() {
             
             //output high all TRIG pins;
             SENZOR_TRIG_PORT |= ((1<<SENZOR_FATA_TRIG) | (1<<SENZOR_SPATE_TRIG) | (1<<SENZOR_STANGA_TRIG) | (1<<SENZOR_DREAPTA_TRIG));
+            PORTA |= (1<<4);
             
             //Compute last distances
             for(int i = 0; i < 4; i++) {
@@ -51,6 +53,7 @@ void ultrasunete_50Hz() {
     case 1: 
             //output low all TRIG pins
             SENZOR_TRIG_PORT &= ~((1<<SENZOR_FATA_TRIG) | (1<<SENZOR_SPATE_TRIG) | (1<<SENZOR_STANGA_TRIG) | (1<<SENZOR_DREAPTA_TRIG));
+            PORTA &= ~(1<<4);
             
             PCICR  |=   (1<<PCIE2); //enable ISR
             

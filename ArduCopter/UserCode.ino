@@ -5,6 +5,7 @@ void userhook_init()
 {
     // put your initialisation code here
     // this will be called once at start-up
+    ultrasunete_init();
 }
 #endif
 
@@ -19,6 +20,7 @@ void userhook_FastLoop()
 void userhook_50Hz()
 {
     // put your 50Hz code here
+    ultrasunete_50Hz();
 }
 #endif
 

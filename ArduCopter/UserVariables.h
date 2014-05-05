@@ -6,6 +6,9 @@
 // variables
 #ifdef USERHOOK_VARIABLES
 
+  #include "Ultrasunete.h"
+
+
 #if WII_CAMERA == 1
 WiiCamera           ircam;
 int                 WiiRange=0;
