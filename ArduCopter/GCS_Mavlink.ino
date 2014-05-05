@@ -404,14 +404,10 @@ static void NOINLINE send_servo_out(mavlink_channel_t chan)
         chan,
         millis(),
         0,         // port 0
-        //g.rc_1.servo_out,
-        //g.rc_2.servo_out,
-        //g.rc_3.radio_out,
-        //g.rc_4.servo_out,
-        distante[0],
-        distante[1],
-        distante[2],
-        distante[3],
+        g.rc_1.servo_out,
+        g.rc_2.servo_out,
+        g.rc_3.radio_out,
+        g.rc_4.servo_out,
         10000 * g.rc_1.norm_output(),
         10000 * g.rc_2.norm_output(),
         10000 * g.rc_3.norm_output(),
@@ -480,14 +476,23 @@ static void NOINLINE send_radio_out(mavlink_channel_t chan)
         chan,
         micros(),
         0, // port
-        rcout[0],
+        /*rcout[0],
         rcout[1],
         rcout[2],
         rcout[3],
         rcout[4],
         rcout[5],
         rcout[6],
-        rcout[7]);
+        rcout[7]); */
+        distante[0],
+        senzorStart,
+        senzorStop,
+        0,
+        0,
+        distante[1],
+        distante[2],
+        distante[3]);
+        
 }
 
 static void NOINLINE send_vfr_hud(mavlink_channel_t chan)

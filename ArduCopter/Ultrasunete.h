@@ -11,8 +11,6 @@
  * PF7 ( ADC7 )	                Analog pin 7
  * PK0 ( ADC8/PCINT16 )      	Analog pin 8
  * PK1 ( ADC9/PCINT17 )	        Analog pin 9
- * PK0 ( ADC8/PCINT16 )      	Analog pin 8
- * PK1 ( ADC9/PCINT17 )	        Analog pin 9
  * PK2 ( ADC10/PCINT18 )	Analog pin 10
  * PK3 ( ADC11/PCINT19 )	Analog pin 11
  * PK4 ( ADC12/PCINT20 )	Analog pin 12
@@ -48,8 +46,12 @@
 #define SENZOR_MAX_RANGE    400 //cm
 #define SENZOR_MIN_RANGE      2 //cm
 
+#define SENZOR_DELAY_RESPONSE  450  //[us] the sensor has a delay between TRIG falling edge and ECHO rising edge
+
 
 //4 sensors {Fata, spate, stanga, dreapta}
-uint16_t distante[4] = {SENZOR_MAX_RANGE, SENZOR_MAX_RANGE, SENZOR_MAX_RANGE, SENZOR_MAX_RANGE};
-volatile unsigned long distante_start_millis[4] = {0};
-volatile unsigned long distante_end_millis[4] = {0};
+unsigned long distante[4] = {SENZOR_MAX_RANGE, SENZOR_MAX_RANGE, SENZOR_MAX_RANGE, SENZOR_MAX_RANGE};
+unsigned long distante_start_millis = 0;
+volatile unsigned long distante_end_millis[4] = {0, 0, 0, 0};
+
+uint16_t senzorStart, senzorStop;

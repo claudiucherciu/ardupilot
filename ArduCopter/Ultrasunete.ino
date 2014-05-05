@@ -15,7 +15,6 @@ void ultrasunete_init() {
   set_output(SENZOR_TRIG_DDR, SENZOR_SPATE_TRIG);
   set_output(SENZOR_TRIG_DDR, SENZOR_STANGA_TRIG);
   set_output(SENZOR_TRIG_DDR, SENZOR_DREAPTA_TRIG);
-  set_output(DDRA, 4);
   //output low all TRIG pins
   SENZOR_TRIG_PORT &= ~((1<<SENZOR_FATA_TRIG) | (1<<SENZOR_SPATE_TRIG) | (1<<SENZOR_STANGA_TRIG) | (1<<SENZOR_DREAPTA_TRIG));
 
@@ -30,20 +29,24 @@ void ultrasunete_50Hz() {
   static unsigned int state = 0;
   switch(state) {
     case 0:
-            //disable ISR to avoid timing updates and race conditions
+            //disable ISR to avoid timing updates
             PCICR  &=   ~(1<<PCIE2); 
             
             //output high all TRIG pins;
             SENZOR_TRIG_PORT |= ((1<<SENZOR_FATA_TRIG) | (1<<SENZOR_SPATE_TRIG) | (1<<SENZOR_STANGA_TRIG) | (1<<SENZOR_DREAPTA_TRIG));
-            PORTA |= (1<<4);
             
             //Compute last distances
             for(int i = 0; i < 4; i++) {
-              unsigned long timp = distante_end_millis[i] - distante_start_millis[i];
-              if (timp > 0) {
-                timp = timp / 58;
-                if ((timp > SENZOR_MIN_RANGE) && (timp < SENZOR_MAX_RANGE)) {
-                  timp = distante[i];
+              
+              if (distante_end_millis[i] > distante_start_millis) {
+                unsigned long dist = (distante_end_millis[i] - distante_start_millis) / 58;       //sound speed for round-trip travel
+                
+                if ((dist > SENZOR_MIN_RANGE) && (dist < SENZOR_MAX_RANGE)) {
+                  distante[i] = dist;
+                  if(i == 0) {
+                    senzorStart = distante_start_millis;
+                    senzorStop  = distante_end_millis[i];
+                  }
                 }
               }
             }
@@ -51,59 +54,47 @@ void ultrasunete_50Hz() {
             state++;
             break;
     case 1: 
+            distante_start_millis = micros() + SENZOR_DELAY_RESPONSE;
             //output low all TRIG pins
             SENZOR_TRIG_PORT &= ~((1<<SENZOR_FATA_TRIG) | (1<<SENZOR_SPATE_TRIG) | (1<<SENZOR_STANGA_TRIG) | (1<<SENZOR_DREAPTA_TRIG));
-            PORTA &= ~(1<<4);
-            
             PCICR  |=   (1<<PCIE2); //enable ISR
+            sei();
             
             state++;
             break;
-            
+    
+    //wait between pulses
+    case 2:
+    case 3:
+            state++;   
+            break;
     default: state = 0;
   }  
 }
 
 
 ISR(PCINT2_vect) {
+  uint8_t port = SENZOR_ECHO_PIN;
+  sei();  //reenable interrupts, we saved what was critical
   
-  static uint8_t lastStatus = 0;
   unsigned long time = micros();
   
-  uint8_t changes = lastStatus ^ SENZOR_ECHO_PIN;
- 
-  if(changes & (1 << SENZOR_FATA_ECHO)) {  //SENZOR_FATA_ECHO was changed
-    if(SENZOR_ECHO_PIN & (1<<SENZOR_FATA_ECHO)) { //pin is now high
-        distante_start_millis[0] = time;
-    }else{
-        distante_end_millis[0] = time;
-    }
+  //Check if any pin is now LOW, and log the time
+  if((port & (1<<SENZOR_FATA_ECHO)) == 0) { 
+      distante_end_millis[0] = time; 
   }
   
-  if(changes & (1 << SENZOR_SPATE_ECHO)) {
-    if(SENZOR_ECHO_PIN & (1<<SENZOR_SPATE_ECHO)) {
-        distante_start_millis[1] = time;
-    }else{
-        distante_end_millis[1] = time;
-    }
+  if((port & (1<<SENZOR_SPATE_ECHO)) == 0) {
+      distante_end_millis[1] = time;
   }
   
-  if(changes & (1 << SENZOR_STANGA_ECHO)) {  
-    if(SENZOR_ECHO_PIN & (1<<SENZOR_STANGA_ECHO)) { 
-        distante_start_millis[2] = time;
-    }else{
-        distante_end_millis[2] = time;
-    }
+  if((port & (1<<SENZOR_STANGA_ECHO)) == 0) { 
+      distante_end_millis[2] = time;
   }
   
-  if(changes & (1 << SENZOR_DREAPTA_ECHO)) {
-    if(SENZOR_ECHO_PIN & (1<<SENZOR_DREAPTA_ECHO)) {
-        distante_start_millis[3] = time;
-    }else{
-        distante_end_millis[3] = time;
-    }
+  if((port & (1<<SENZOR_DREAPTA_ECHO)) == 0) {
+      distante_end_millis[3] = time;
   }
   
-  lastStatus = SENZOR_ECHO_PIN;
 }
 
