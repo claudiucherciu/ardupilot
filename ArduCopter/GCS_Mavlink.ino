@@ -484,11 +484,11 @@ static void NOINLINE send_radio_out(mavlink_channel_t chan)
         rcout[5],
         rcout[6],
         rcout[7]); */
-        distante[0],
         senzorStart,
         senzorStop,
         0,
         0,
+        distante[0],
         distante[1],
         distante[2],
         distante[3]);

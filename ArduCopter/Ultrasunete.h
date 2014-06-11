@@ -1,18 +1,18 @@
 // ultrasunete.h
 /* ATMEGA2560 AnalogIN pin mappings:
  *
- * PF0 ( ADC0 )	                Analog pin 0
- * PF1 ( ADC1 )	                Analog pin 1
- * PF2 ( ADC2 )	                Analog pin 2
- * PF3 ( ADC3 )	                Analog pin 3
+ * PF0 ( ADC0 )	                Analog pin 0     --TRIG
+ * PF1 ( ADC1 )	                Analog pin 1     --TRIG
+ * PF2 ( ADC2 )	                Analog pin 2     --TRIG
+ * PF3 ( ADC3 )	                Analog pin 3     --TRIG
  * PF4 ( ADC4/TMK )	        Analog pin 4
  * PF5 ( ADC5/TMS )	        Analog pin 5
  * PF6 ( ADC6 )	                Analog pin 6
  * PF7 ( ADC7 )	                Analog pin 7
- * PK0 ( ADC8/PCINT16 )      	Analog pin 8
- * PK1 ( ADC9/PCINT17 )	        Analog pin 9
- * PK2 ( ADC10/PCINT18 )	Analog pin 10
- * PK3 ( ADC11/PCINT19 )	Analog pin 11
+ * PK0 ( ADC8/PCINT16 )      	Analog pin 8      --ECHO
+ * PK1 ( ADC9/PCINT17 )	        Analog pin 9      --ECHO
+ * PK2 ( ADC10/PCINT18 )	Analog pin 10     --ECHO
+ * PK3 ( ADC11/PCINT19 )	Analog pin 11     --ECHO
  * PK4 ( ADC12/PCINT20 )	Analog pin 12
  * PK5 ( ADC13/PCINT21 )	Analog pin 13
  * PK6 ( ADC14/PCINT22 )	Analog pin 14
