@@ -23,7 +23,7 @@
  # define CLI_ENABLED           DISABLED            // disable the CLI (command-line-interface) to save 21K of flash space
 #endif
 
-//#define LOGGING_ENABLED       DISABLED            // disable dataflash logging to save 11K of flash space
+#define LOGGING_ENABLED       DISABLED            // disable dataflash logging to save 11K of flash space
 #define MOUNT                 DISABLED            // disable the camera gimbal to save 8K of flash space
 #define AUTOTUNE_ENABLED      DISABLED            // disable the auto tune functionality to save 7k of flash
 #define AC_FENCE              DISABLED            // disable fence to save 2k of flash
