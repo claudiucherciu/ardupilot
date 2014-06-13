@@ -30,7 +30,7 @@ void ultrasunete_50Hz() {
   static unsigned int state = 0;
   
   
-  if(state % 2 == 0) {  //send TRIG on even numbers
+  if(state % 2 == 0) {  //send TRIG on even states
                 
     //output high TRIG pin;
     switch(state/2) {
@@ -50,9 +50,25 @@ void ultrasunete_50Hz() {
     
     state++;
             
-  }else{    //read ECHO on odd numbers
-
-    //mark the ECHO start moment
+  }else{    //wait ECHO on odd states
+  
+    //compute last distance
+    unsigned char i = (state-1)/2;
+    if(i>3) i=3;
+    
+    if (distante_end_millis[i] > distante_start_millis) {
+      unsigned long dist = (distante_end_millis[i] - distante_start_millis) / 58;       //sound speed for round-trip travel
+      
+      if ((dist > SENZOR_MIN_RANGE) && (dist < SENZOR_MAX_RANGE)) {
+        distante[i] = dist;
+        if(i == 0) { //debug timing
+          senzorStart = distante_start_millis;
+          senzorStop  = distante_end_millis[0];
+        }
+      }
+    }
+    
+    //mark the next ECHO start moment
     distante_start_millis = micros() + SENZOR_DELAY_RESPONSE;
     
     //output low TRIG pin
@@ -83,28 +99,9 @@ void ultrasunete_50Hz() {
   
   if (state > 7) { 
     state = 0;
-    compute_distances(); //update all sensor distances
   }
 }
 
-
-void compute_distances() {
-  //Compute last distances
-  for(int i = 0; i < 4; i++) {
-    
-    if (distante_end_millis[i] > distante_start_millis) {
-      unsigned long dist = (distante_end_millis[i] - distante_start_millis) / 58;       //sound speed for round-trip travel
-      
-      if ((dist > SENZOR_MIN_RANGE) && (dist < SENZOR_MAX_RANGE)) {
-        distante[i] = dist;
-        if(i == 0) {
-          senzorStart = distante_start_millis;
-          senzorStop  = distante_end_millis[i];
-        }
-      }
-    }
-  }
-}//compute_distances()
 
 ISR(PCINT2_vect) {
   uint8_t port = SENZOR_ECHO_PIN;
