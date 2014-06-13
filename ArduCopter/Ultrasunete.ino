@@ -75,6 +75,7 @@ void ultrasunete_50Hz() {
     SENZOR_TRIG_PORT &= ~((1<<SENZOR_FATA_TRIG) | (1<<SENZOR_SPATE_TRIG) | (1<<SENZOR_STANGA_TRIG) | (1<<SENZOR_DREAPTA_TRIG));
     
     //enable PCINT for ECHO pins
+    PCMSK2 &= ~((1<<SENZOR_FATA_ECHO) | (1<<SENZOR_SPATE_ECHO) | (1<<SENZOR_STANGA_ECHO) | (1<<SENZOR_DREAPTA_ECHO));  //First disable the rest of the interrupts
     switch((state-1) /2) {
       case 0:
         PCMSK2 |= (1<<SENZOR_FATA_ECHO);
