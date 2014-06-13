@@ -28,6 +28,7 @@ void userhook_50Hz()
 void userhook_MediumLoop()
 {
     // put your 10Hz code here
+    //ultrasunete_50Hz();
 }
 #endif
 
