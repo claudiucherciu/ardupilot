@@ -54,16 +54,16 @@ void ultrasunete_50Hz() {
     //output high TRIG pin;
     switch(state/2) {
       case 0:
-        SENZOR_TRIG_PORT |= (1<<SENZOR_FATA_TRIG);
+        output_high(SENZOR_TRIG_PORT, SENZOR_FATA_TRIG);
         break;
       case 1:
-        SENZOR_TRIG_PORT |= (1<<SENZOR_SPATE_TRIG);
+        output_high(SENZOR_TRIG_PORT, SENZOR_SPATE_TRIG);
         break;
       case 2:
-        SENZOR_TRIG_PORT |= (1<<SENZOR_STANGA_TRIG);
+        output_high(SENZOR_TRIG_PORT, SENZOR_STANGA_TRIG);
         break;
       case 3:
-        SENZOR_TRIG_PORT |= (1<<SENZOR_DREAPTA_TRIG);
+        output_high(SENZOR_TRIG_PORT, SENZOR_DREAPTA_TRIG);
         break;
     }
     
